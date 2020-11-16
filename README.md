@@ -1,0 +1,2 @@
+- SS Project의 Back-End(Python Flask FrameWork) Parts 입니다.
+- Front-End(ReactJS) Parts의 URL은 <a href="https://github.com/limsoo5788/ss_react">https://github.com/limsoo5788/ss_react</a> 입니다.
