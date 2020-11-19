@@ -2,6 +2,7 @@ from . import db
 
 
 class User(db.Model):
+    __tablename__ = 'user';
     user_id = db.Column(db.Integer, primary_key = True)
     email = db.Column(db.String(64), unique=True, index=True)
     password_hash = db.Column(db.String(64))
@@ -10,10 +11,13 @@ class User(db.Model):
     confirm = db.Column(db.Boolean, default=False)
 
     tasks = db.relationship('Task', backref = 'author', lazy='dynamic')
+    tasks_sharing = db.relationship('Task', backref = 'user', lazy = 'dynamic')
+
 
 class Task(db.Model):
+    __tablename__ = 'task';
     task_id = db.Column(db.Integer, primary_key = True)
-    user_id = db.Column(db.Integer, db.ForeignKey('User.user_id', primary_key = True)
+    user_id = db.Column(db.Integer, db.ForeignKey('User.user_id'), primary_key = True)
     title = db.Column(db.String(128))
     start_date = db.Column(db.DateTime())
     end_date = db.Column(db.DateTime())
@@ -21,3 +25,22 @@ class Task(db.Model):
     review_path = db.Column(db.String(256))
     log_path = db.Column(db.String(256))
     checked = db.Column(db.Boolean, default=False)
+
+    tasks_sharing = db.relationship('Task_sharing', backref = 'task', lazy = 'dynamic')
+
+
+class Task_sharing(db.Model):
+    __tablename__ = 'task_sharing';
+    task_id = db.Column(db.Integer, db.ForeignKey('Task.task_id'), primary_key=True)
+    admin_id = db.Column(db.Integer, db.ForeignKey('Task.user_id'), primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('User.user_id'), primary_key=True)
+    level = db.Column(db.Integer)
+
+
+class Contents(db.Model):
+    __tablename__ = 'contents';
+    contents_id = db.Column(db.Integer, primary_key = True)
+    task_id = db.Column(db.Integer, db.ForeignKey('Task.task_id'), primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('Task.user_id'), primary_key=True)
+    name = db.Column(db.String(128), index=True, nullable=False)
+    level = db.Column(db.Integer)
